@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="registration">
+    <button>Регистрация</button>
+</form>
+<form action="login">
+    <button>Войти</button>
+</form>
+<form method="post">
+    <table>
+        {% for movie in movies %}
+            <tbody>
+            <tr>
+                <td>
+                    <img src="{{ movie.src }}">
+                </td>
+                <td>
+                    {{ movie.name }}
+                </td>
+                <td>
+                    {{ movie.description }}
+                </td>
+                <td>
+                    {{ movie.length }}
+                </td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+</form>
+</body>
+</html>

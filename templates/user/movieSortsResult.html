@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    {% for movie in movies %}
+        <tbody>
+        <tr>
+            <td>
+                <img src="{{ movie.src }}">
+            </td>
+            <td>
+                {{ movie.name }}
+            </td>
+            <td>
+                {{ movie.description }}
+            </td>
+            <td>
+                {{ movie.length }}
+            </td>
+            <td>
+                {% for genre in genres %}
+                    {% if genre in movie.genres %}
+                        <label>
+                            {{ genre.name }}
+                        </label>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <input type="hidden" value="{{ movie.id }}" name="movie_id">
+                <a href="{{ url_for('show_movie', movie_id=movie.id) }}">
+                    <button>перейти</button>
+                </a>
+            </td>
+            <td>
+                <form method="post" action="{{ url_for('delete_movie_from_library') }}">
+                    <input type="hidden" value="{{ movie.id }}" , name="movie_id">
+                    <button type="submit">удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    {% endfor %}
+</table>
+</body>
+</html>

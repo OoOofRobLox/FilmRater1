@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="{{ url_for('add_movie_to_user') }}">
+    <input list="datalistOptions1" name="user_name">
+    <datalist id="datalistOptions1">
+        {% for user in users %}
+            <option value="{{ user.nickname }}">
+        {% endfor %}
+    </datalist>
+    <input list="datalistOptions2" name="movie_name">
+    <datalist id="datalistOptions2">
+        {% for movie in movies %}
+            <option value="{{ movie.name }}">
+        {% endfor %}
+    </datalist>
+    <button type="submit">add</button>
+</form>
+
+<table>
+    <thead>
+    <th>Пользователь</th>
+    <th>Фильм</th>
+    <th>Удалить</th>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        {% for movie in user.movies %}
+            <tr>
+                <form method="post" action="{{ url_for('delete_movie_from_user') }}">
+                    <td>
+                        <input type="hidden" value="{{ user.id }}" name="user_id">
+                        {{ user.nickname }}
+                    </td>
+                    <td>
+                        <input type="hidden" value="{{ movie.id }}" name="movie_id">
+                        {{ movie.name }}
+                    </td>
+                    <td>
+                        <button type="submit">удалить</button>
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

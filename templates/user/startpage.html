@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('logout') }}" method="POST">
+    <button>Выйти</button>
+</form>
+<form method="get" action="{{ url_for('library') }}">
+    <button>Библиотека</button>
+</form>
+<form action="{{ url_for('find_by_name') }}" method="GET">
+    <label>Название</label>
+    <input name="name">
+</form>
+</form>
+<form action="{{ url_for('find_by_genre') }}" method="POST">
+    <label>Жанры</label>
+    {% for genre in genres %}
+        <div>
+            <input class="form-check-input" type="checkbox"
+                   id="gcb{{ genre.id }}"
+                   value="{{ genre.id }}" name="gcb{{ genre.id }}">
+            <label class="form-check-label" for="gcb{{ genre.id }}">
+                {{ genre.name }}
+            </label>
+        </div>
+    {% endfor %}
+    <button>Найти</button>
+</form>
+<form method="post" action="{{ url_for('calculate') }}">
+    <input list="datalistOptions3" name="criteria_name">
+    <datalist id="datalistOptions3">
+        {% for criteria in criterias %}
+            <option value="{{ criteria.name }}">
+        {% endfor %}
+    </datalist>
+    <input name="evaluation">
+    <button type="submit">найти</button>
+</form>
+<form method="post" action="{{ url_for('sort_by_general_rating') }}">
+    <button>Сортировать по рейтингу</button>
+</form>
+<table>
+    {% for movie in movies %}
+        <tbody>
+        <tr>
+            <td>
+                <img src="{{ movie.src }}">
+            </td>
+            <td>
+                {{ movie.name }}
+            </td>
+            <td>
+                {{ movie.description }}
+            </td>
+            <td>
+                {{ movie.length }}
+            </td>
+            <td>
+                {{ movie.generalRating }}
+            </td>
+            <td>
+                {% for genre in genres %}
+                    {% if genre in movie.genres %}
+                        <label>
+                            {{ genre.name }}
+                        </label>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <input type="hidden" value="{{ movie.id }}" name="movie_id">
+                <a href="{{ url_for('show_movie', movie_id=movie.id) }}">
+                    <button>перейти</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    {% endfor %}
+</table>
+</body>
+</html>

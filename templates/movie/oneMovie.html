@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-warning mt-3" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
+<form method="post" action="{{ url_for('add_movie_to_library', movie_id=movie.id) }}">
+    <table>
+        <thead>
+        <th>изображение</th>
+        <th>название</th>
+        <th>описание</th>
+        <th>продролжительность</th>
+        <th>Общий рейтинг</th>
+        <th>жанры</th>
+        <th></th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <img src="{{ movie.src }}">
+            </td>
+            <td>
+                {{ movie.name }}
+            </td>
+            <td>
+                {{ movie.description }}
+            </td>
+            <td>
+                {{ movie.length }}
+            </td>
+            <td>
+                {{ movie.generalRating }}
+            </td>
+            <td>
+                {% for genre in genres %}
+                    {% if genre in movie.genres %}
+                        <label>
+                            {{ genre.name }}
+                        </label>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <input type="hidden" value="{{ movie.id }}" name="movie_id">
+                <button type="submit">добавить</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<form method="post" action="{{ url_for('add_crmov_by_usr', movie_id=movie.id) }}">
+    <label>Критерий</label>
+    <input list="datalistOptions" name="criteria_name">
+    <datalist id="datalistOptions">
+        {% for criteria in criterias %}
+            <option value="{{ criteria.name }}">
+        {% endfor %}
+    </datalist>
+    <label>Evaluation</label>
+    <input name="evaluation">
+    <button>add</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <td>
+            <label>Кртиерий</label>
+        </td>
+        <td>
+            <label>Оценка</label>
+        </td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for cr in user.criteriaMovies %}
+        {% if cr.cmovies.id == movie.id %}
+            <tr>
+                <td>
+                    {{ cr.critrias.name }}
+                </td>
+                <td>
+                    {{ cr.evaluation }}
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">критерий</th>
+        <th scope="col">оценка</th>
+        <th scope="col">изменить</th>
+        <th scope="col">удалить</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for cr in user.criteriaMovies %}
+        {% if cr.cmovies.id == movie.id %}
+            <tr>
+                <td>
+                    <input value="{{ cr.critrias.name }}" name="criteria_name">
+                </td>
+                <form method="post" action="{{ url_for('change_user_criteriamovie', movie_id=movie.id) }}">
+                    <td>
+                        <input value="{{ cr.evaluation }}" name="evaluation">
+                    </td>
+                    <td>
+                        <input type="hidden" value="{{ cr.id }}" name="criteriamovie_id">
+                        <button>Изменить</button>
+                    </td>
+                </form>
+                <td>
+                    <form method="post" action="{{ url_for('delete_user_criteriamovie', movie_id=movie.id) }}">
+                        <input type="hidden" value="{{ cr.id }}" name="criteriamovie_id">
+                        <button>Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<h3>добавить комментарий</h3>
+<form method="post" action="{{ url_for('add_commentary_by_usr', movie_id=movie.id) }}">
+    <textarea name="comment_text"></textarea>
+    <button type="submit">добавить</button>
+</form>
+<h3>изменить комментарий</h3>
+<table>
+    <tbody>
+    {% for comm in user.comments %}
+        {% if comm.movie.id == movie.id %}
+            <tr>
+                <form method="post" action="{{ url_for('change_commentary_by_usr', movie_id=movie.id) }}">
+                    <td>
+                        <textarea name="comment_text">{{ comm.text }}</textarea>
+                    </td>
+                    <td>
+                        <input type="hidden" value="{{ comm.id }}" name="commentary_id">
+                        <button type="submit">изменить</button>
+                    </td>
+                </form>
+                <td>
+                    <form method="post" action="{{ url_for('delete_commentary_by_usr', movie_id=movie.id) }}">
+                        <input type="hidden" value="{{ comm.id }}" name="commentary_id">
+                        <button type="submit">удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+<h3>комментарии</h3>
+<table>
+    <tbody>
+    {% for com in movie.comments %}
+        <tr>
+            <td>
+                <textarea>{{ com.text }}</textarea>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
