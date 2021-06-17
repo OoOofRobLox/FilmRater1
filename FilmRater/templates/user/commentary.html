@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('add_commentary') }}" method="POST">
+    <div>
+        <label>User</label>
+        <label>User</label>
+        <input list="datalistOptions" name="user_name">
+        <datalist id="datalistOptions">
+            {% for user in users %}
+                <option value="{{ user.nickname }}">
+            {% endfor %}
+        </datalist>
+        <label>Movie</label>
+        <input list="datalistOptions1" name="movie_name">
+        <datalist id="datalistOptions1">
+            {% for movie in movies %}
+                <option value="{{ movie.name }}">
+            {% endfor %}
+        </datalist>
+        <label>Text</label>
+        <input name="text">
+    </div>
+    <button>Добавить</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">user</th>
+        <th scope="col">movie</th>
+        <th scope="col">text</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for com in comms %}
+        <tr>
+            <form method="post" action="{{ url_for('change_commentary') }}">
+                <td>
+                    <input list="datalist" value="{{ com.user.nickname }}" name="user_name">
+                    <datalist id="datalist">
+                        {% for user in users %}
+                            <option value="{{ user.nickname }}">
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <input list="datalist1" value="{{ com.movie.name }}" name="movie_name">
+                    <datalist id="datalist1">
+                        {% for movie in movies %}
+                            <option value="{{ movie.name }}">
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <input type="text" value="{{ com.text }}" name="text">
+                    <button>Изменить</button>
+                </td>
+            </form>
+            <td>
+                <form method="post" action="{{ url_for('delete_commentary') }}">
+                    <input type="hidden" value="{{ com.id }}" name="commentary_id">
+                    <button>Удалить</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('add_criteriamovie') }}" method="POST">
+    <div>
+        <label>criteria++movie</label>
+        <label>User</label>
+        <input list="datalistOptions" name="user_name">
+        <datalist id="datalistOptions">
+            {% for user in users %}
+                <option value="{{ user.nickname }}">
+            {% endfor %}
+        </datalist>
+        <label>Movie</label>
+        <input list="datalistOptions1" name="movie_name">
+        <datalist id="datalistOptions1">
+            {% for movie in movies %}
+                <option value="{{ movie.name }}">
+            {% endfor %}
+        </datalist>
+        <label>Criteria</label>
+        <input list="datalistOptions2" name="criteria_name">
+        <datalist id="datalistOptions2">
+            {% for criteria in crit %}
+                <option value="{{ criteria.name }}">
+            {% endfor %}
+        </datalist>
+        <label>Evaluation</label>
+        <input name="evaluation">
+    </div>
+    <button>Добавить</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">user</th>
+        <th scope="col">movie</th>
+        <th scope="col">criteria</th>
+        <th scope="col">eval</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for cm in crMov %}
+        <tr>
+            <form method="post" action="{{ url_for('change_criteriamovie') }}">
+                <td>
+                    <input list="datalist" value="{{ cm.user.nickname }}" name="user_name">
+                    <datalist id="datalist">
+                        {% for user in users %}
+                            <option value="{{ user.nickname }}">
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <input list="datalist1" value="{{ cm.movie.name }}" name="user_name">
+                    <datalist id="datalist1">
+                        {% for movie in movies %}
+                            <option value="{{ movie.name }}">
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <input list="datalist2" value="{{ cm.criteria.name }}" name="user_name">
+                    <datalist id="datalist2">
+                        {% for movie in movies %}
+                            <option value="{{ criteria.name }}">
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <input type="text" value="{{ cm.evaluation }}" name="evaluation">
+                    <button>Изменить</button>
+                </td>
+            </form>
+            <td>
+                <form method="post" action="{{ url_for('delete_criteriamovie') }}">
+                    <input type="hidden" value="{{ criteriamovie.id }}" name="criteriamovie">
+                    <button>Удалить</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

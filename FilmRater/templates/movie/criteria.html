@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('add_criteria') }}" method="POST">
+    <div>
+        <label>Критерий</label>
+        <input type="text" name="criteria_name">
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Добавить</button>
+</form>
+<table>
+    <thead>
+    <th>Название</th>
+    <th>изменить</th>
+    <th>delete</th>
+    </thead>
+    <tbody>
+    {% for criteria in criterias %}
+        <tr>
+            <form method="post" action="{{ url_for('change_criteria') }}">
+                <td>
+                    <input type="text" value="{{ criteria.name }}" name="name">
+                </td>
+                <td><input type="hidden" value="{{ criteria.id }}" name="criteria_id">
+                    <button type="submit">Изменить</button>
+                </td>
+            </form>
+            <td>
+                <form method="post" action="{{ url_for('delete_criteria') }}">
+                    <input type="hidden" value="{{ criteria.id }}" name="criteria_id">
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

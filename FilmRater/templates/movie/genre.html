@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="{{ url_for('add_genre') }}" method="POST">
+    <div>
+        <label>Genre</label>
+        <input name="name">
+    </div>
+    <button>Добавить</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Название</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for genre in genres %}
+        <tr>
+                <form method="post" action="{{ url_for('change_genre') }}">
+                    <td>
+                        <input type="text" value="{{ genre.name }}" name="name">
+                    </td>
+                    <td>
+                        <input type="hidden" value="{{ genre.id }}" name="genre_id">
+                        <button>Изменить</button>
+                    </td>
+                </form>
+                <td>
+                    <form method="post" action="{{ url_for('delete_genre') }}">
+                        <input type="hidden" value="{{ genre.id }}" name="genre_id">
+                        <button>Удалить</button>
+                    </form>
+                </td>
+            </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+</body>
+</html>
