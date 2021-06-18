@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
+import traceback
 
 from app import app, db
 from model import User, Movie, Genre, Criteria
@@ -23,8 +24,10 @@ def add_movie_to_library(movie_id):
         user.movies.append(Movie.query.filter(Movie.id == movie_id).first())
         db.session.commit()
     except Exception:
+        traceback.print_exc()
         flash('')
         return redirect(url_for('show_movie', movie_id=movie_id))
+    print('qwe')
     return redirect(url_for('show_movie', movie_id=movie_id))
 
 

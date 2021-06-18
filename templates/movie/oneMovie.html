@@ -10,51 +10,53 @@
         {{ message }}
     </div>
 {% endfor %}
-<form method="post" action="{{ url_for('add_movie_to_library', movie_id=movie.id) }}">
-    <table>
-        <thead>
-        <th>изображение</th>
-        <th>название</th>
-        <th>описание</th>
-        <th>продролжительность</th>
-        <th>Общий рейтинг</th>
-        <th>жанры</th>
-        <th></th>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <img src="{{ movie.src }}">
-            </td>
-            <td>
-                {{ movie.name }}
-            </td>
-            <td>
-                {{ movie.description }}
-            </td>
-            <td>
-                {{ movie.length }}
-            </td>
-            <td>
-                {{ movie.generalRating }}
-            </td>
-            <td>
-                {% for genre in genres %}
-                    {% if genre in movie.genres %}
-                        <label>
-                            {{ genre.name }}
-                        </label>
-                    {% endif %}
-                {% endfor %}
-            </td>
-            <td>
+
+<table>
+    <thead>
+    <th>изображение</th>
+    <th>название</th>
+    <th>описание</th>
+    <th>продролжительность</th>
+    <th>Общий рейтинг</th>
+    <th>жанры</th>
+    <th></th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <img src="{{ movie.src }}">
+        </td>
+        <td>
+            {{ movie.name }}
+        </td>
+        <td>
+            {{ movie.description }}
+        </td>
+        <td>
+            {{ movie.length }}
+        </td>
+        <td>
+            {{ movie.generalRating }}
+        </td>
+        <td>
+            {% for genre in genres %}
+                {% if genre in movie.genres %}
+                    <label>
+                        {{ genre.name }}
+                    </label>
+                {% endif %}
+            {% endfor %}
+        </td>
+        <td>
+            <form method="post" action="{{ url_for('add_movie_to_library', movie_id=movie.id) }}">
                 <input type="hidden" value="{{ movie.id }}" name="movie_id">
                 <button type="submit">добавить</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</form>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 <form method="post" action="{{ url_for('add_crmov_by_usr', movie_id=movie.id) }}">
     <label>Критерий</label>
     <input list="datalistOptions" name="criteria_name">

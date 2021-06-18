@@ -67,10 +67,16 @@ def show_movie(movie_id):
 @login_required
 @has_authority('Admin')
 def delete_movie():
-    movie_id = request.form.get('movie_id')
     try:
+        movie_id = request.form.get('movie_id')
         mov = Movie.query.filter(Movie.id == movie_id).first()
-        mov.genres.clear()
+        mov.genres = []
+        db.session.commit()
+        mov.comments = []
+        db.session.commit()
+        mov.users = []
+        db.session.commit()
+        mov.criteriaMovies = []
         db.session.commit()
         db.session.delete(mov)
         db.session.commit()

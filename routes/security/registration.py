@@ -13,7 +13,7 @@ from sqlalchemy import func
 @app.route('/registration', methods=['GET'])
 def registration():
     cities = City.query.all()
-    return render_template("security/registration.html", citites=cities)
+    return render_template("security/registration.html", cities=cities)
 
 
 @app.route('/registration', methods=['POST'])
@@ -25,7 +25,21 @@ def registration_post():
 
         nickname = request.form.get('nickname')
 
+        users = User.query.all()
+
+        for us in users:
+            if nickname == us.nickname:
+                flash("Данный пользователь зарегистрирован!")
+                return redirect(url_for('registration'))
+
         city_name = request.form.get('city_name')
+
+        cities = City.query.all()
+
+        for city in cities:
+            if city_name != city.name:
+                flash("Данного города не существует!")
+                return redirect(url_for('registration'))
 
         cty = City.query.filter(func.lower(City.name) == func.lower(city_name)).first()
 
