@@ -20,6 +20,7 @@
     <th>Общий рейтинг</th>
     <th>жанры</th>
     <th></th>
+    <th></th>
     </thead>
     <tbody>
     <tr>
@@ -51,6 +52,12 @@
             <form method="post" action="{{ url_for('add_movie_to_library', movie_id=movie.id) }}">
                 <input type="hidden" value="{{ movie.id }}" name="movie_id">
                 <button type="submit">добавить</button>
+            </form>
+        </td>
+        <td>
+            <form method="post" action="{{ url_for('add_favorite_movie', movie_id=movie.id) }}">
+                <input type="hidden" value="{{ movie.id }}" name="movie_id">
+                <button type="submit">добавить в любимое</button>
             </form>
         </td>
     </tr>

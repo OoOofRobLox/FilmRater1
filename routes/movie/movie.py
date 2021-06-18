@@ -1,9 +1,10 @@
 from flask import render_template, request, redirect, url_for, flash
+import traceback
 
 from app import app, db
 from flask_login import login_required, current_user
 from sqlalchemy import func
-from model import Movie, Genre, CriteriaMovie, Criteria, User
+from model import Movie, Genre, CriteriaMovie, Criteria, User, Commentary
 from utils.decorator import has_authority
 
 
@@ -70,18 +71,23 @@ def delete_movie():
     try:
         movie_id = request.form.get('movie_id')
         mov = Movie.query.filter(Movie.id == movie_id).first()
-        mov.genres = []
+        mov.genres.clear()
         db.session.commit()
-        mov.comments = []
-        db.session.commit()
-        mov.users = []
-        db.session.commit()
-        mov.criteriaMovies = []
-        db.session.commit()
+        comms = Commentary.query.filter(Commentary.movie_id == movie_id).all()
+        for com in comms:
+            db.session.delete(com)
+            db.session.commit()
+        users = User.query.all()
+        for user in users:
+            if mov in user.movies:
+                user.movies.remove(Movie.query.filter(Movie.id == movie_id).first())
+                user.favorites.remove(Movie.query.filter(Movie.id == movie_id).first())
+                db.session.commit()
         db.session.delete(mov)
         db.session.commit()
     except Exception:
         flash('Невозможно удалть.')
+        traceback.print_exc()
         return redirect(url_for('movie'))
     return redirect(url_for('movie'))
 

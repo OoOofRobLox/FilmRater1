@@ -12,6 +12,11 @@ user_movie = db.Table('user_movie',
                       db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True)
                       )
 
+favorite = db.Table('favorite',
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+                    db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True)
+                    )
+
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
@@ -27,8 +32,11 @@ class User(db.Model, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
 
     comments = db.relationship('Commentary', backref='user', lazy=True)
-    movies = db.relationship('Movie', secondary=user_movie, lazy=False, backref=db.backref('umovies', lazy=True))
+    movies = db.relationship('Movie', secondary=user_movie, cascade='all,delete', lazy=False,
+                             backref=db.backref('umovies', lazy=True))
     criteriaMovies = db.relationship('CriteriaMovie', backref='cmusers', lazy=True)
+    favorites = db.relationship('Movie', secondary=favorite, cascade='all,delete', lazy=False,
+                                backref=db.backref('favMovies', lazy=True))
 
     def is_active(self):
         return self.active
@@ -60,10 +68,14 @@ class Movie(db.Model):
     src = db.Column(db.String(1023), unique=False, nullable=False, default=DEFAULT_PROFILE_IMAGE)
     isFavorite = db.Column(db.Boolean, unique=False, nullable=False)
 
-    genres = db.relationship('Genre', secondary=genre_movie, lazy=False, backref=db.backref('genres', lazy=True))
-    comments = db.relationship('Commentary', backref='movie', lazy=True)
-    users = db.relationship('User', secondary=user_movie, lazy=False, backref=db.backref('users', lazy=True))
-    criteriaMovies = db.relationship('CriteriaMovie', backref='cmovies', lazy=True)
+    genres = db.relationship('Genre', secondary=genre_movie, lazy=False, cascade='all,delete',
+                             backref=db.backref('genres', lazy=True))
+    comments = db.relationship('Commentary', backref='movie', lazy=True, cascade='all,delete')
+    users = db.relationship('User', secondary=user_movie, lazy=False, cascade='all,delete',
+                            backref=db.backref('users', lazy=True))
+    criteriaMovies = db.relationship('CriteriaMovie', backref='cmovies', lazy=True, cascade='all,delete')
+    inFavorites = db.relationship('User', secondary=favorite, lazy=False, cascade='all,delete',
+                                  backref=db.backref('inFavorites', lazy=True))
 
 
 class Genre(db.Model):
@@ -71,7 +83,8 @@ class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
 
-    movies = db.relationship('Movie', secondary=genre_movie, lazy=False, backref=db.backref('gmovies', lazy=True))
+    movies = db.relationship('Movie', secondary=genre_movie, lazy=False, cascade='all,delete',
+                             backref=db.backref('gmovies', lazy=True))
 
 
 class Criteria(db.Model):
@@ -99,5 +112,3 @@ class CriteriaMovie(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
     criteria_id = db.Column(db.Integer, db.ForeignKey('criteria.id'), nullable=False)
-
-

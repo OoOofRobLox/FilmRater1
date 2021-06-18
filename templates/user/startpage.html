@@ -11,6 +11,9 @@
 <form method="get" action="{{ url_for('library') }}">
     <button>Библиотека</button>
 </form>
+<form method="get" action="{{ url_for('fav') }}">
+    <button>любимое</button>
+</form>
 <form action="{{ url_for('find_by_name') }}" method="GET">
     <label>Название</label>
     <input name="name">

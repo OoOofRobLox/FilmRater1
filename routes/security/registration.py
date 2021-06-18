@@ -34,13 +34,6 @@ def registration_post():
 
         city_name = request.form.get('city_name')
 
-        cities = City.query.all()
-
-        for city in cities:
-            if city_name != city.name:
-                flash("Данного города не существует!")
-                return redirect(url_for('registration'))
-
         cty = City.query.filter(func.lower(City.name) == func.lower(city_name)).first()
 
         user = User.query.filter(User.email == email).first()

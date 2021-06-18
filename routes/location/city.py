@@ -7,8 +7,8 @@ from flask_login import login_required, current_user
 
 
 @app.route('/city', methods=['GET'])
-@login_required
-@has_authority('Admin')
+#@login_required
+#@has_authority('Admin')
 def city():
     name = request.args.get('name')
 
@@ -20,8 +20,8 @@ def city():
 
 
 @app.route('/city', methods=['POST'])
-@login_required
-@has_authority('Admin')
+#@login_required
+#@has_authority('Admin')
 def add_city():
     name = request.form.get('name')
     try:
